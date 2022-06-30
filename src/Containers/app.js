@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Display } from "../Presentational/Display.js";
 import moment from "moment";
 import momentTimezone from "moment-timezone";
-const API_KEY = require("../../config.json");
 
 export default function App() {
   const [forecast, setForecast] = useState({
@@ -43,16 +42,28 @@ export default function App() {
   const regulateTime = ({ target }) => {
     let hours = target.value;
     let days = Math.floor(hours / 24);
-    setUserInput((prevInput) => {
-      return {
-        ...prevInput,
-        rangeValue: target.value,
-        hours,
-        listTime: hours / 3,
-        displayTime: `${days} days and ${hours - days * 24} hours`
-      };
-    });
-    forecasting(forecast); //a-ha! timestamped 10:32 jun 29! done.
+    new Promise((resolve, reject) => {
+      setUserInput((prevInput) => {
+        return {
+          ...prevInput,
+          rangeValue: target.value,
+          hours,
+          listTime: hours / 3,
+          displayTime: `${days} days and ${hours - days * 24} hours`
+        };
+      });
+      setTimeout(resolve(), 5000);
+    }).then(
+      (resolve) => {
+        forecasting(forecast);
+      },
+      (error) => {
+        console.log(
+          "I don't know why, I dont know how, but there is an error. Check line 59."
+        );
+      }
+    );
+    //a-ha! timestamped 10:32 jun 29! done.
   };
 
   const weatherMojify = (data) => {
@@ -112,7 +123,7 @@ export default function App() {
     }
     axios
       .get(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${userInput.lat}&lon=${userInput.lon}&appid=${API_KEY.API_KEY}&units=imperial`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${userInput.lat}&lon=${userInput.lon}&appid=53c0da2672903e735d3f77d032dac7a6&units=imperial`
       )
       .then((response) => {
         setUserInput({
