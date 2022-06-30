@@ -42,33 +42,22 @@ export default function App() {
   const regulateTime = ({ target }) => {
     let hours = target.value;
     let days = Math.floor(hours / 24);
-    new Promise((resolve, reject) => {
-      setUserInput((prevInput) => {
-        return {
-          ...prevInput,
-          rangeValue: target.value,
-          hours,
-          listTime: hours / 3,
-          displayTime: `${days} days and ${hours - days * 24} hours`
-        };
-      });
-      setTimeout(resolve(), 5000);
-    }).then(
-      (resolve) => {
-        forecasting(forecast);
-      },
-      (error) => {
-        console.log(
-          "I don't know why, I dont know how, but there is an error. Check line 59."
-        );
-      }
-    );
-    //a-ha! timestamped 10:32 jun 29! done.
+    setUserInput((prevInput) => {
+      return {
+        ...prevInput,
+        rangeValue: target.value,
+        hours,
+        listTime: hours / 3,
+        displayTime: `${days} days and ${hours - days * 24} hours`
+      };
+    });
+    forecasting(forecast, hours / 3); //a-ha! timestamped 10:32 jun 29! done. //and again 12:48 PM. Fixed.
   };
 
-  const weatherMojify = (data) => {
+  const weatherMojify = (data, lTime) => {
     let weatherType;
-    switch (data.list[userInput.listTime].weather[0].main) {
+
+    switch (data.list[lTime].weather[0].main) {
       case "Clouds":
         weatherType = "Clouds☁";
         break;
@@ -91,12 +80,12 @@ export default function App() {
     return weatherType;
   };
 
-  const utcToLocation = (data) => {
+  const utcToLocation = (data, lTime) => {
     if (data.city.timezone) {
       let convertedOffset = data.city.timezone / 3600;
       //let dtPlusOffset=(`${forecast.list[userInput.listTime].dt_txt}${convertedOffset}`)
       let finalDate = moment
-        .utc(data.list[userInput.listTime].dt_txt)
+        .utc(data.list[lTime].dt_txt)
         .utcOffset(convertedOffset);
       console.log(`\n\nmoment was offset by ${convertedOffset}`);
       console.log(`timeset submitted: ${finalDate}`);
@@ -105,10 +94,11 @@ export default function App() {
     return "none";
   };
 
-  const forecasting = (data) => {
+  const forecasting = (data, lTime = userInput.listTime) => {
+    //lTime is here so that regulateTime has the ability to directly pipe values to forecasting.
     //lets me reduce clutter a bit (?) and also call this in both getData() and regulateTime() to ensure that weatherType updates when changes are made.
-    let weatherType = weatherMojify(data);
-    let locationDate = utcToLocation(data);
+    let weatherType = weatherMojify(data, lTime);
+    let locationDate = utcToLocation(data, lTime);
     setForecast({
       ...data,
       weatherType,
