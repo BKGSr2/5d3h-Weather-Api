@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Display } from "../Presentational/Display.js";
 import moment from "moment";
 import momentTimezone from "moment-timezone";
+const API_KEY = require("../../config.json");
 
 export default function App() {
   const [forecast, setForecast] = useState({
@@ -111,7 +112,7 @@ export default function App() {
     }
     axios
       .get(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${userInput.lat}&lon=${userInput.lon}&appid=53c0da2672903e735d3f77d032dac7a6&units=imperial`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${userInput.lat}&lon=${userInput.lon}&appid=${API_KEY.API_KEY}&units=imperial`
       )
       .then((response) => {
         setUserInput({
