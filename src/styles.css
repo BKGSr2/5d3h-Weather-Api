@@ -1,0 +1,51 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+  background-color: cadetblue;
+}
+
+input {
+  margin: 10px;
+  text-align: center;
+}
+
+.leftside {
+  margin-right: 350px;
+}
+
+#submit {
+  position: absolute;
+  width: 120px;
+  height: 60px;
+  right: 12px;
+  top: 50px;
+}
+
+#location {
+  position: absolute;
+  width: 35%;
+  top: 23%;
+  left: 32.5%;
+}
+
+#temperature {
+  position: absolute;
+  width: 35%;
+  top: 37%;
+  left: 32.5%;
+}
+
+.dateTimeB {
+  position: absolute;
+
+  top: 64%;
+  width: 60%;
+  left: 32.5%;
+}
+.weatherMoji {
+  position: absolute;
+
+  width: 35%;
+  top: 51%;
+  left: 32.5%;
+}
